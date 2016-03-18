@@ -8,9 +8,10 @@ int main()
 	TODOBuilder tdb;
 
 	tdb.addFile("example.test");
-	tdb.buildTodo();
-	tdb.generateRaw("output.txt");	
+	if(!tdb.buildTODO())
+		return -1;
 	
+	std::cout << tdb;	
 
 	return 0;
 }

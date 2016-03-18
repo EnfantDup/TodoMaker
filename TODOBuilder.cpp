@@ -53,3 +53,29 @@ bool TODOBuilder::buildTODO()
 bool TODOBuilder::generateRaw(std::string outputFile)
 {
 }
+
+const TODOMap& TODOBuilder::getTODOList() const
+{
+	return m_TODOList;
+}
+
+std::ostream& operator<<(std::ostream& os, const TODOBuilder& tb)
+{
+	const TODOMap& todoList = tb.getTODOList();
+
+	//Parcours la liste des fichiers
+	for(auto fileIT = todoList.begin(); fileIT != todoList.end(); fileIT++)
+	{
+		os << "Fichier " << fileIT->first << " :" << std::endl;
+
+		//Parcours des TODO d'un fichier
+		for(auto todoIT = fileIT->second.begin(); todoIT != fileIT->second.end(); todoIT++)
+		{
+			os << "-" << *todoIT << std::endl;
+		}
+	}
+
+
+	return os;
+}
+

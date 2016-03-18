@@ -17,11 +17,15 @@ class TODOBuilder
 		void addFile(std::string file);
 		bool buildTODO();
 		bool generateRaw(std::string outputFile);
+		const TODOMap & getTODOList() const;
 
 	private:
 		//Map of TODO linked to a filename
 		TODOMap  m_TODOList;
 };
+
+
+std::ostream& operator<<(std::ostream& os, const TODOBuilder& tb);
 
 #endif
 
