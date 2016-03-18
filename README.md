@@ -1,6 +1,15 @@
 # TodoMaker
 A tool to generate a todo list out of a group of file. It can be used with code source files (like .cpp).
 
+Requirements
+------------
+
+The boost library is needed in order build the program. You can install boost in most distribution using apt-get :
+	sudo apt-get install libboost-all-dev
+
+You can then run the Makefile to build the program :
+	make
+	
 Usage
 -----
 
