@@ -6,8 +6,43 @@ TODOBuilder::TODOBuilder()
 
 void TODOBuilder::addFile(std::string file)
 {
-	m_TODOList.insert(TODOMap::value_type(file, TODOVector()));
+	//Check if file isn't already added
+	auto it = m_TODOList.find(file);
+
+	if(it == m_TODOList.end())
+		m_TODOList.insert(TODOMap::value_type(file, TODOVector()));
 } 
+
+bool TODOBuilder::addDirectory(std::string directory)
+{
+	//Create path
+	boost::filesystem::path dir_path(directory);
+
+	//Directory need to exist
+	if(!boost::filesystem::exists(dir_path))
+	{
+		std::cerr << "Directory " << directory << " doesn't exist" << std::endl;
+		return false;
+	}
+	else
+	{
+		boost::filesystem::directory_iterator end_it;
+		//Iterate all files
+		for(boost::filesystem::directory_iterator it(dir_path); it != end_it; it++)
+		{
+			//Add file or directory
+			if(!boost::filesystem::is_directory(it->status()))
+			{
+				addFile(it->path().string());
+			}
+			else
+			{
+				addDirectory(it->path().string());
+			}
+		}
+	}
+	return true;
+}
 
 bool TODOBuilder::buildTODO()
 {
@@ -32,7 +67,8 @@ bool TODOBuilder::buildTODO()
 				if(pos != std::string::npos)
 				{
 					//Get from TODO to then end
-					std::string comment = line.substr(pos);
+					//Remove the 4 char of TODO
+					std::string comment = line.substr(pos+4);
 					//Add statement to the list
 					it->second.push_back(TODO(it->first, lineNumber, comment));
 				}

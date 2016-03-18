@@ -15,7 +15,7 @@ program_INCLUDE_DIRS :=
 
 program_LIBRARY_DIRS := 
 
-program_LIBRARIES :=
+program_LIBRARIES := 
 
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir)) -std=c++11
 
@@ -23,12 +23,13 @@ LDFLAGS += $(foreach library,$(program_LIBRARY_DIRS),-L$(librarydir))
 
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
+BOOST := -lboost_filesystem -lboost_system 
 .PHONY: all clean distclean
 
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	$(LINK.cc) $(program_OBJS) -o $(program_NAME) $(BOOST)
 
 clean:
 	@- $(RM) $(program_NAME)
