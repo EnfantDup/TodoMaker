@@ -7,7 +7,7 @@ int main()
 	
 	TODOBuilder tdb;
 
-	tdb.addDirectory("test");
+	tdb.addFile("example.test");
 	if(!tdb.buildTODO())
 		return -1;
 	

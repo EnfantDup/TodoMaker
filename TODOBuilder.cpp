@@ -58,20 +58,61 @@ bool TODOBuilder::buildTODO()
 		if(file.good())
 		{
 			unsigned int lineNumber = 1;
+			std::string multipleLineComment;
+			bool isMultipleLineComment = false;
+			unsigned int MCLine = 0;
+
 			//Read every line
 			while(getline(file, line))
 			{
-				std::size_t pos = line.find("TODO");
-				
-				//If TODO statement found
-				if(pos != std::string::npos)
+				//Multiple line comment actually reading ?
+				if(isMultipleLineComment)
 				{
-					//Get from TODO to then end
-					//Remove the 4 char of TODO
-					std::string comment = line.substr(pos+4);
-					//Add statement to the list
-					it->second.push_back(TODO(it->first, lineNumber, comment));
+					std::size_t pos = line.find("ETODO");
+					
+					//If end of Multiple TODO not found, just add the line
+					if(pos == std::string::npos)
+					{
+						multipleLineComment += "\n";
+						multipleLineComment += line;
+					}
+					else
+					{
+						//End of multiple line TODO, push the TODO
+						isMultipleLineComment = false;
+						it->second.push_back(TODO(it->first, MCLine, multipleLineComment));	
+						multipleLineComment = "";
+					}
 				}
+				else
+				{
+					//Check for multiple line TODO
+					std::size_t pos = line.find("BTODO");
+					
+					//If so, set boolean to true
+					if(pos != std::string::npos)
+					{
+						multipleLineComment = line.substr(pos+5);
+						isMultipleLineComment = true;
+						MCLine = lineNumber;
+					}
+					else
+					{
+ 						//Else check for simple line TODO
+						pos = line.find("TODO");
+				
+						//If TODO statement found
+						if(pos != std::string::npos)
+						{
+							//Get from TODO to then end
+							//Remove the 4 char of TODO
+							std::string comment = line.substr(pos+4);
+							//Add statement to the list
+							it->second.push_back(TODO(it->first, lineNumber, comment));
+						}
+					}
+				}
+				
 				lineNumber++;
 			}
 			file.close();
